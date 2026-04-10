@@ -1,45 +1,53 @@
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 public class TrainApp {
 
-    // Bogie class
-    static class Bogie {
-        String name;
-        int capacity;
+    // ✅ Goods Bogie class
+    static class GoodsBogie {
+        String type;   // Cylindrical, Open, Box
+        String cargo;  // Petroleum, Coal, Grain
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
+        public GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
         }
 
         @Override
         public String toString() {
-            return name + " (" + capacity + ")";
+            return type + " (" + cargo + ")";
         }
     }
 
-    // ✅ Reusable method (VERY IMPORTANT)
-    public static Map<String, List<Bogie>> groupBogies(List<Bogie> bogies) {
+    // ✅ UC12: Safety validation using allMatch()
+    public static boolean isTrainSafe(List<GoodsBogie> bogies) {
         return bogies.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
+                .allMatch(b ->
+                        // Rule: Cylindrical → only Petroleum
+                        !b.type.equalsIgnoreCase("Cylindrical") ||
+                                b.cargo.equalsIgnoreCase("Petroleum")
+                );
     }
 
     public static void main(String[] args) {
 
         System.out.println("=== Train Consist Management App ===");
 
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 70));
-        bogies.add(new Bogie("First Class", 40));
+        // Step 1: Create goods bogies
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new GoodsBogie("Open", "Coal"));
+        bogies.add(new GoodsBogie("Box", "Grain"));
 
-        // ✅ Use method
-        Map<String, List<Bogie>> groupedBogies = groupBogies(bogies);
+        // Step 2: Display bogies
+        System.out.println("\nGoods Bogies:");
+        bogies.forEach(System.out::println);
 
-        System.out.println("\nGrouped Bogies:");
-        groupedBogies.forEach((key, value) ->
-                System.out.println(key + " -> " + value));
+        // Step 3: Safety validation
+        boolean isSafe = isTrainSafe(bogies);
+
+        // Step 4: Result
+        System.out.println("\nSafety Compliance Status: "
+                + (isSafe ? "SAFE ✅" : "UNSAFE ❌"));
     }
 }
