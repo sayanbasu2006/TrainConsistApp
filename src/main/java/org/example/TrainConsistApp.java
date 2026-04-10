@@ -1,38 +1,47 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class TrainApp {
+
+    // Bogie class (inner class)
+    static class Bogie {
+        String name;
+        int capacity;
+
+        // Constructor
+        public Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
+        }
+
+        // toString() for display
+        @Override
+        public String toString() {
+            return name + " (Capacity: " + capacity + ")";
+        }
+    }
 
     public static void main(String[] args) {
 
         // Welcome message
         System.out.println("=== Train Consist Management App ===");
 
-        // Create LinkedList for ordered consist
-        LinkedList<String> trainConsist = new LinkedList<>();
+        // Create list of bogies
+        List<Bogie> bogies = new ArrayList<>();
 
         // Add bogies
-        trainConsist.add("Engine");
-        trainConsist.add("Sleeper");
-        trainConsist.add("AC");
-        trainConsist.add("Cargo");
-        trainConsist.add("Guard");
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 40));
 
-        // Display initial consist
-        System.out.println("\nInitial Train Consist:");
-        System.out.println(trainConsist);
+        // Sort bogies by capacity (ascending)
+        bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
-        // Insert Pantry Car at position 2
-        trainConsist.add(2, "Pantry Car");
-
-        System.out.println("\nAfter adding Pantry Car at position 2:");
-        System.out.println(trainConsist);
-
-        // Remove first and last bogie
-        trainConsist.removeFirst();
-        trainConsist.removeLast();
-
-        // Final consist
-        System.out.println("\nFinal Train Consist:");
-        System.out.println(trainConsist);
+        // Display sorted bogies
+        System.out.println("\nBogies Sorted by Capacity:");
+        for (Bogie b : bogies) {
+            System.out.println(b);
+        }
     }
 }
